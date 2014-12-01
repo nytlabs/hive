@@ -1,0 +1,58 @@
+{
+  "Project": {
+    "Id": "crowd",
+    "Name": "Crowd",
+    "Description": "An example crowd sourcing site."
+  },
+  "Tasks": [
+    {
+      "Name": "categorize",
+      "Description": "categorize images",
+      "CurrentState": "available",
+      "AssignmentCriteria": {
+        "SubmittedData": {
+          "categorize": {}
+        }
+      },
+      "CompletionCriteria": {
+        "Total": 50,
+        "Matching": 50
+      }
+    },
+    {
+      "Name": "vote",
+      "Description": "vote on image quality (from 1 to 10)",
+      "CurrentState": "waiting",
+      "AssignmentCriteria": {
+        "SubmittedData": {
+          "categorize": {
+            "ad-content": "usable"
+          },
+          "vote": {}
+        }
+      },
+      "CompletionCriteria": {
+        "Total": 2,
+        "Matching": 2
+      }
+    }
+  ],
+  "Assets": [
+    {
+      "Name": "Space 1",
+      "Url": "http://upload.wikimedia.org/wikipedia/commons/8/84/Wormhole.png"
+    },
+    {
+      "Name": "Space 2",
+      "Url": "http://www.speed-light.info/images/wormhole_01.JPG"
+    },
+    {
+      "Name": "Space 3",
+      "Url": "http://blogs.scientificamerican.com/observations/files/2013/08/Black_Hole_Milkyway.jpg"
+    },
+    {
+      "Name": "Space 4",
+      "Url": "http://fc02.deviantart.net/fs12/i/2006/263/2/5/Wormhole_v2_by_Acidcliff.png"
+    }
+  ]
+}
