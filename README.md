@@ -1,3 +1,5 @@
+![hive-logo-sm](https://cloud.githubusercontent.com/assets/3397/5253268/57e86618-7973-11e4-9199-170cec4f4fe3.png)
+
 # hive
 
 A platform for backing crowdsourcing websites, built in [Go](http://golang.org/) for [Elasticsearch](http://elasticsearch.org).
