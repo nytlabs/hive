@@ -21,7 +21,7 @@ There are two options for running hive.
 
 ### Binary
 
-Download the [latest release](https://github.com/nytlabs/hive/releases) and double click to start. `hive` will be running on http://localhost:8080 by default.
+Download the [latest release](https://github.com/nytlabs/hive/releases), unzip and double click to start. `hive` will be running on http://localhost:8080 by default.
 
 ### Source
 
