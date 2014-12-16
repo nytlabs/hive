@@ -3206,25 +3206,48 @@ func (s *Server) UserAssignmentHandler(w http.ResponseWriter, r *http.Request) {
 func (s *Server) AdminSetupHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	indexExists, _ := s.EsConn.IndicesExists(s.Index)
+	log.Println("Importing data into hive...")
+
+	log.Println("Step 1: configuring elasticsearch.")
+	indexExists, possible404 := s.EsConn.IndicesExists(s.Index)
+
+	// for reasons mysterious to me, elastigo wraps all of the http pkg's functions
+	// and does not check if the response to IndicesExists is a 404.
+	// Elasticsearch will respond with a 404 if the index does not exist.
+	// Here we check for this and correctly set the value of indexExists to false
+	if possible404 != nil && possible404.Error() == "record not found" {
+		indexExists = false
+
+		// otherwise some other error was thrown, so just 500 and give up here.
+	} else if possible404 != nil {
+		s.wrapResponse(w, r, 500, s.wrapError(possible404))
+		return
+	}
+
 	if vars["DELETE_MY_DATABASE"] == "YES_I_AM_SURE" && indexExists {
 		// Delete existing hive index (was: curl -XDELETE localhost:9200/hive  >/dev/null 2>&1)
 		_, err := s.EsConn.DeleteIndex(s.Index)
 		if err != nil {
+			log.Println("Failed to delete index:", err)
 			s.wrapResponse(w, r, 500, s.wrapError(err))
 			return
 		}
+		log.Println("Deleted index", s.Index, ". I hope that was ok - you said you were sure!")
 		indexExists = false
+	} else if indexExists {
+		giveUpErr := fmt.Errorf("Index '%s' exists. Use a different value or add 'YES_I_AM_SURE' to delete it: /admin/setup/YES_I_AM_SURE.", s.Index)
+		s.wrapResponse(w, r, 500, s.wrapError(giveUpErr))
+		return
 	}
 
 	if !indexExists {
+		log.Println("Creating index", s.Index)
 		// Create hive index (was: curl -XPOST localhost:9200/hive >/dev/null 2>&1)
 		_, err := s.EsConn.CreateIndex(s.Index)
 		if err != nil {
 			s.wrapResponse(w, r, 500, s.wrapError(err))
 			return
 		}
-		log.Println("Created", s.Index, "index")
 	}
 
 	assignmentsBody := `{
@@ -3274,6 +3297,11 @@ func (s *Server) AdminSetupHandler(w http.ResponseWriter, r *http.Request) {
 		s.wrapResponse(w, r, 500, s.wrapError(err))
 		return
 	}
+
+	log.Println("Done configuring elasticsearch")
+
+	log.Println("Step 2: creating project.")
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		s.wrapResponse(w, r, 500, s.wrapError(err))
@@ -3299,14 +3327,18 @@ func (s *Server) AdminSetupHandler(w http.ResponseWriter, r *http.Request) {
 		s.wrapResponse(w, r, 500, s.wrapError(err))
 		return
 	}
-	log.Println("Created project:", s.ActiveProjectId)
+	log.Println("Done creating project:", s.ActiveProjectId)
+
+	log.Println("Step 3: importing tasks.")
 
 	tasks, _, err := s.importTasks(importedJson.Tasks)
 	if err != nil {
 		s.wrapResponse(w, r, 500, s.wrapError(err))
 		return
 	}
-	log.Println("Created tasks:", len(tasks))
+	log.Println("Done creating tasks:", len(tasks))
+
+	log.Println("Step 4: adding assets.")
 
 	assetsBody := `{
 		"assets": {
@@ -3366,7 +3398,7 @@ func (s *Server) AdminSetupHandler(w http.ResponseWriter, r *http.Request) {
 		s.wrapResponse(w, r, 500, s.wrapError(err))
 		return
 	}
-	log.Println("Created", len(assets), "assets")
+	log.Println("Done adding", len(assets), "assets")
 
 	report := []byte(fmt.Sprintf(`{"status":"200 OK", "Project": "%s", "Tasks": "%d", "Assets": "%d"}`, s.ActiveProjectId, len(tasks), len(assets)))
 	s.wrapResponse(w, r, 200, report)
@@ -3390,6 +3422,7 @@ func (s *Server) Run() {
 
 	// ANY /admin/setup - clears out db, configures elasticsearch and creates a project
 	r.HandleFunc("/admin/setup", s.AdminSetupHandler)
+	r.HandleFunc("/admin/setup/{DELETE_MY_DATABASE}", s.AdminSetupHandler)
 
 	// GET /admin/projects - returns all projects in Hive
 	r.HandleFunc("/admin/projects", s.AdminProjectsHandler).Methods("GET")
