@@ -813,7 +813,7 @@ func (s *Server) AdminUsersHandler(w http.ResponseWriter, r *http.Request) {
 	s.wrapResponse(w, r, 200, usersJson)
 }
 
-// Creates or updates a project by parsing the JSON body of the request.
+// CreateProject: Creates or updates a project by parsing the JSON body of the request.
 func (s *Server) CreateProject(requestBody io.Reader) (project *Project, err error) {
 	body, err := ioutil.ReadAll(requestBody)
 	if err != nil {
@@ -838,7 +838,7 @@ func (s *Server) CreateProject(requestBody io.Reader) (project *Project, err err
 	return project, nil
 }
 
-// Creates or updates a task by parsing the JSON body of the request.
+// CreateTask: Creates or updates a task by parsing the JSON body of the request.
 func (s *Server) CreateTask(requestBody io.Reader) (task *Task, err error) {
 	body, err := ioutil.ReadAll(requestBody)
 	if err != nil {
@@ -867,7 +867,7 @@ func (s *Server) CreateTask(requestBody io.Reader) (task *Task, err error) {
 	return task, nil
 }
 
-// Creates assets in this project by parsing the JSON body of the request.
+// CreateAssets: Creates assets in this project by parsing the JSON body of the request.
 func (s *Server) CreateAssets(requestBody io.Reader) (assets []Asset, err error) {
 	body, err := ioutil.ReadAll(requestBody)
 	if err != nil {
@@ -2493,7 +2493,7 @@ func (s *Server) AssignmentHandler(w http.ResponseWriter, r *http.Request) {
 	s.wrapResponse(w, r, 200, assignmentJson)
 }
 
-// Looks for a cookie named 'cookieName' in the request.
+// FindCookieValue: Looks for a cookie named 'cookieName' in the request.
 // If the cookie is found, returns its value.
 // Otherwise returns an empty string.
 func (s *Server) FindCookieValue(r *http.Request, cookieName string) (cookieValue string) {
@@ -2512,7 +2512,7 @@ func (s *Server) FindCookieValue(r *http.Request, cookieName string) (cookieValu
 	return cookie.Value
 }
 
-// Creates a user based on the JSON body of the request.
+// CreateUser: Creates a user based on the JSON body of the request.
 func (s *Server) CreateUser(requestBody io.Reader) (user *User, err error) {
 
 	body, err := ioutil.ReadAll(requestBody)
@@ -2568,7 +2568,7 @@ func (s *Server) CreateUser(requestBody io.Reader) (user *User, err error) {
 	return user, nil
 }
 
-// Creates a user account with a given user id, called when a user has a {project_id}_user_id but no matching record is found.
+// CreateUserFromMissingCookieValue: Creates a user account with a given user id, called when a user has a {project_id}_user_id but no matching record is found.
 // in other words, this method is used in edge cases.
 func (s *Server) CreateUserFromMissingCookieValue(userId string) (User, error) {
 	var err error
@@ -2618,7 +2618,7 @@ func (s *Server) CreateUserFromMissingCookieValue(userId string) (User, error) {
 	return user, nil
 }
 
-// Creates a user account with a given ExternalId. This method is used to link user accounts from third
+// CreateExternalUser: Creates a user account with a given ExternalId. This method is used to link user accounts from third
 // party/external registration systems into hive.
 func (s *Server) CreateExternalUser(externalId string) (User, error) {
 	var user User
@@ -3192,7 +3192,7 @@ func (s *Server) UserAssignmentHandler(w http.ResponseWriter, r *http.Request) {
 	s.wrapResponse(w, r, 200, assignJson)
 }
 
-// Admin endpoint clears out db, configures elasticsearch and creates a project
+// AdminSetupHandler: Admin endpoint clears out db, configures elasticsearch and creates a project
 //		ANY /admin/setup
 // WARNING: this empties your database. Really.
 // @Title AdminSetupHandler
@@ -3405,7 +3405,7 @@ func (s *Server) AdminSetupHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-// Starts up hive-server on the specified port, connecting to Elasticsearch at {esDomain}:{esPort} using the given index.
+// Run starts up hive-server on the specified port, connecting to Elasticsearch at {esDomain}:{esPort} using the given index.
 // Default parameters:
 //		hive port: 8080
 //		elasticsearch domain: localhost
