@@ -19,11 +19,11 @@ You can find instructions for other platforms in the [elasticsearch guide](http:
 
 There are two options for running hive.
 
-### Binary
+###  Binary ;
 
 Download the [latest release](https://github.com/nytlabs/hive/releases), unzip and double click to start. `hive` will be running on http://localhost:8080 by default.
 
-### Source
+### Source available
 
 This method will allow you to hack on the `hive` source code. You'll need `go` installed and a working environment for it ($GOPATH, etc).
 
@@ -61,7 +61,7 @@ Usage of ./build/hive-server:
   -port="8080": hive port
 ```
 
-## Importing Data
+## Data Imported
 
 All of a project's information is defined in JSON and POST'd to `hive` at its admin setup endpoint. You can find [a full example in this repo](https://github.com/nytlabs/hive/blob/master/samples/example.json). 
 
@@ -91,7 +91,7 @@ Description | optional, additional information about the project
   }
 ```
 
-### Tasks
+### Tasks Performed
 
 Tasks are individual actions to do on an asset. A project can have one or more tasks. Criteria for assignment and verification of assets is stored on a task.
 
