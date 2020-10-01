@@ -2,7 +2,7 @@
 
 # hive
 
-A platform for backing crowdsourcing websites, built in [Go](http://golang.org/) for [Elasticsearch](http://elasticsearch.org).
+A platform for backing crowdsourcing websites, built in [Go](http://golang.org/) for [Elasticsearch](http://elasticsearch.org)...
 
 ## Setup
 
