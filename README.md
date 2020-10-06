@@ -2,11 +2,13 @@
 
 # hive
 
-A platform for backing crowdsourcing websites, built in [Go](http://golang.org/) for [Elasticsearch](http://elasticsearch.org).
+This is a great platform for backing crowdsourcing websites, built in [Go](http://golang.org/) for [Elasticsearch](http://elasticsearch.org).
+
+======================================
 
 ## Setup
 
-Hive requires elasticsearch version 1.3 or higher. Where you install it is up to you, as you can tell `hive` the domain and port for accessing elasticsearch at startup.
+The Hive requires elasticsearch version 1.3 or higher. Where you install it is up to you, as you can tell `hive` the domain and port for accessing elasticsearch at startup.
 
 Installation on a Mac is simple with [homebrew](http://brew.sh/):
 
@@ -19,9 +21,13 @@ You can find instructions for other platforms in the [elasticsearch guide](http:
 
 There are two options for running hive.
 
+========================================
+
 ### Binary
 
 Download the [latest release](https://github.com/nytlabs/hive/releases), unzip and double click to start. `hive` will be running on http://localhost:8080 by default.
+
+==========================================
 
 ### Source
 
@@ -60,6 +66,7 @@ Usage of ./build/hive-server:
   -index="hive": elasticsearch index name
   -port="8080": hive port
 ```
+================================================
 
 ## Importing Data
 
@@ -71,6 +78,8 @@ $ curl -XPOST localhost:8080/admin/setup -d@samples/example.json
 2014/11/21 12:29:22 task: 2
 2014/11/21 12:29:22 assets: 4
 ```
+
+===================================================
 
 ### Projects
 
@@ -90,6 +99,8 @@ Description | optional, additional information about the project
     "Description": "An example crowd sourcing site."
   }
 ```
+
+======================================================
 
 ### Tasks
 
@@ -124,6 +135,8 @@ CompletionCriteria | the criteria used to mark an asset as 'completed' for this 
    ]
 ```
 
+==================================================
+
 ### Assets
 
 Assets are what get assigned to users and can be images, pdfs, etc. All require a URL and are scoped to a project.
@@ -145,11 +158,15 @@ Metadata | optional, any additional data about this asset, specified as key-valu
    ]
 ```
 
+=================================================
+
 ## Users
 
 Users are the members of the crowd that you source in your app. They are scoped to a project, so the same person can have multiple records, one per project. Which fields are required is up to you - Hive will create a user with only an ID, to keep the barrier of entry low.
 
 The current user is determined by a cookie named `{project_id}_user_id`, for example, `crowd_user_id`. This cookie should contain the id for the current user.
+
+======================================================
 
 ### Create
 
@@ -176,6 +193,8 @@ The current user is determined by a cookie named `{project_id}_user_id`, for exa
 
 Your site should set the user_id cookie with the Id value returned in this response.
 
+==================================================
+
 ### Get the current user
 
 **GET** /projects/{project_id}/user
@@ -200,6 +219,8 @@ Your site should set the user_id cookie with the Id value returned in this respo
     "Favorites": {}
 }
 ```
+
+===============================================
 
 ## Assignments
 
